@@ -2,9 +2,9 @@ You can invoke this module like this:
 
 ``` sh
 module "geth" {
-  network = "rinkeby"
   source  = "cardstack/ethereum-node/aws"
   version = "0.1.2"
+  network = "rinkeby"
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQ ..."
   availability_zone = "us-east-1b"
 }
