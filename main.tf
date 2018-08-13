@@ -1,48 +1,13 @@
-variable "public_key" { }
-
-variable "network" {
-  description = "The Ethereum network to use, e.g. 'rinkeby', 'mainnet', etc"
-  default = "rinkeby"
-}
-
-variable "availability_zone" {
-  description = "The availablity zone within the region"
-}
-variable "volume_device_name" {
-  default = "/dev/xvdh"
-}
-
-variable "volume_size" {
-  description = "The volume size to hold the Ethereum blocks. At minimum this should be at least 1 GB, perferably larger."
-  default = "2047"
-}
-
-variable "instance_type" {
-  default = "m4.xlarge"
-}
-
-output "geth_instance_id" {
-  value = "${aws_instance.geth.id}"
-}
-
-output "ws_url" {
-  value = "ws://${aws_instance.geth.public_ip}:8546"
-}
-
-output "http_url" {
-  value = "http://${aws_instance.geth.public_ip}:8545"
-}
-
 resource "aws_default_vpc" "default" {
-    tags {
-        Name = "Default VPC"
-    }
+  tags {
+    Name = "Default VPC"
+  }
 }
 
 resource "aws_default_subnet" "default" {
   availability_zone = "${var.availability_zone}"
     tags {
-        Name = "Default subnet for availablity zone ${var.availability_zone}"
+      Name = "Default subnet for availablity zone ${var.availability_zone}"
     }
 }
 
