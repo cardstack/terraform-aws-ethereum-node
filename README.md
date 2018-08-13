@@ -9,8 +9,9 @@ This module's basic usage requires that you provide the Ethereum network to conn
 
 ```
 module "geth" {
+  source  = "cardstack/ethereum-node/aws"
+  version = "0.1.2"
   network = "rinkeby"
-  source = "cardstack/terraform-aws-ethereum-node/aws"
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQ ..."
   availability_zone = "us-east-1b"
 }
