@@ -1,12 +1,12 @@
 resource "aws_default_vpc" "default" {
-  tags {
+  tags = {
     Name = "Default VPC"
   }
 }
 
 resource "aws_default_subnet" "default" {
   availability_zone = "${var.availability_zone}"
-    tags {
+    tags = {
       Name = "Default subnet for availablity zone ${var.availability_zone}"
     }
 }
@@ -109,8 +109,8 @@ data "aws_ami" "ubuntu" {
 
 resource "aws_instance" "geth" {
   ami           = "${data.aws_ami.ubuntu.id}"
-  lifecycle = {
-    ignore_changes = "ami"
+  lifecycle {
+    ignore_changes = [ami]
   }
 
   instance_type = "${var.instance_type}"
@@ -120,12 +120,12 @@ resource "aws_instance" "geth" {
   iam_instance_profile = "${aws_iam_instance_profile.geth.name}"
   key_name = "${aws_key_pair.geth.key_name}"
 
-  tags {
+  tags = {
     Name = "Ethereum geth ${var.network}"
   }
 
   # Storage must be SSD, otherwise blocks are mined faster than they can be written to storage
-  root_block_device = {
+  root_block_device {
     volume_type = "io1"
     iops = "32000"
     volume_size = "${var.volume_size}"
