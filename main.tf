@@ -1,44 +1,34 @@
-resource "aws_default_vpc" "default" {
-  tags = {
-    Name = "Default VPC"
-  }
-}
-
-resource "aws_default_subnet" "default" {
-  availability_zone = "${var.availability_zone}"
-  tags = {
-    Name = "Default subnet for availablity zone"
-  }
-}
-
 resource "aws_security_group" "geth" {
   name        = "${var.label}-geth-${var.network}"
   description = "geth container ${var.network}"
 
-  vpc_id = "${aws_default_vpc.default.id}"
+  vpc_id = var.vpc_id
 
   ingress {
-    from_port   = 8545
-    to_port     = 8545
-    protocol    = "tcp"
-    description = "web3 http port"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port       = 8545
+    to_port         = 8545
+    protocol        = "tcp"
+    description     = "web3 http port"
+    self            = true
+    security_groups = var.geth_access_security_groups
   }
 
   ingress {
-    from_port   = 8546
-    to_port     = 8546
-    protocol    = "tcp"
-    description = "web3 websocket port"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port       = 8546
+    to_port         = 8546
+    protocol        = "tcp"
+    description     = "web3 websocket port"
+    self            = true
+    security_groups = var.geth_access_security_groups
   }
 
   ingress {
-    from_port   = 30303
-    to_port     = 30303
-    protocol    = "udp"
-    description = "geth node p2p port"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port       = 30303
+    to_port         = 30303
+    protocol        = "udp"
+    description     = "geth node p2p port"
+    self            = true
+    security_groups = var.geth_access_security_groups
   }
 
   ingress {
@@ -115,10 +105,10 @@ locals {
 resource "aws_instance" "geth" {
   ami = "${data.aws_ami.ubuntu.id}"
   lifecycle {
-    ignore_changes = [ami]
+    ignore_changes = [ami, user_data]
   }
   instance_type = "${var.instance_type}"
-  subnet_id = "${aws_default_subnet.default.id}"
+  subnet_id = var.subnet_id
 
   tags = {
     Name = "${var.label} geth ${var.network}"
@@ -133,6 +123,7 @@ resource "aws_instance" "geth" {
   user_data = <<EOF
 #!/bin/bash
 NETWORK_FLAG=${local.network_flag}
+KEY_FILE=${var.key_file}
 ${file("${path.module}/provision-geth.sh")}
 EOF
 }

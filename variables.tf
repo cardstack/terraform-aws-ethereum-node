@@ -19,3 +19,19 @@ variable "instance_type" {
 variable "label" {
   description = "A label to use when naming this instance and associated resources in AWS"
 }
+
+variable "geth_access_security_groups" {
+  description = "security groups that can access the geth api"
+}
+
+variable "vpc_id" {
+  description = "The VPC the node should live in"
+}
+
+variable "subnet_id" {
+  description = "The subnet the node should live in"
+}
+
+variable "key_file" {
+  description = "The private key file to include in the user data"
+}

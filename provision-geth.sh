@@ -45,7 +45,10 @@ mkdir -p $GETH_DIR
 docker run -d --name ethereum-node --restart always -v ${GETH_DIR}:/root \
      -p 8545:8545 -p 8546:8546 -p 30303:30303 \
      ethereum/client-go:stable $NETWORK_FLAG \
-     --rpc --rpcapi eth,net,web3 --rpcaddr 0.0.0.0 \
-     --ws --wsaddr 0.0.0.0 --wsorigins '*' --wsapi eth,net,web3 \
-     --cache 4096
+     --rpc --rpcapi personal,eth,net,web3 --rpcaddr 0.0.0.0 \
+     --ws --wsaddr 0.0.0.0 --wsorigins '*' --wsapi personal,eth,net,web3 \
+     --cache 4096 --allow-insecure-unlock
+
+mkdir -p /data/ethereum/.ethereum/rinkeby/keystore/
+echo $KEY_FILE > /data/ethereum/.ethereum/rinkeby/keystore/geth_key.json
 
